@@ -1,386 +1,457 @@
-
 <!DOCTYPE html>
 <html lang="my">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>3D Wedding Invitation</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>မောင်အောင်ကျော်စိုး ♥ မနွယ်နီအောင် - Digital Wedding Invitation</title>
+  <style>
+    :root {
+      --gold-dark: #6b4b12;
+      --gold-mid: #a87b28;
+      --gold-light: #e5c67b;
+      --cream: #fffdf7;
+      --paper: #f9f1df;
+      --ink: #2b2113;
+    }
 
-<style>
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-html, body {
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  background: #17130e;
-}
+    body {
+      min-height: 100vh;
+      background: radial-gradient(circle at top, #f7efe0 0%, #e4d6bb 100%);
+      color: var(--ink);
+      font-family: "Pyidaungsu", "Noto Sans Myanmar", sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 16px 12px 36px;
+    }
 
-body {
-  display: grid;
-  place-items: center;
-}
+    .top-nav {
+      width: 100%;
+      max-width: 520px;
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+      margin-bottom: 12px;
+      scrollbar-width: none;
+    }
 
-/* 9:16 MAIN STAGE */
-#stage {
-  position: relative;
-  width: 1080px;
-  height: 1920px;
-  overflow: hidden;
-  transform-origin: center center;
-  background:
-    radial-gradient(ellipse at center,
-      #fffef9 0%,
-      #f8f0df 65%,
-      #e6d6b7 100%);
-  perspective: 1800px;
-}
+    .top-nav::-webkit-scrollbar { display: none; }
 
-/* LIGHT EFFECT */
-.light {
-  position: absolute;
-  inset: 0;
-  z-index: 10;
-  pointer-events: none;
-  background:
-    radial-gradient(circle at 50% 45%,
-      transparent 25%,
-      rgba(142, 105, 42, .12) 100%);
-}
+    .nav-btn {
+      flex: 1 0 auto;
+      padding: 8px 13px;
+      border: 1px solid var(--gold-light);
+      background: rgba(255, 253, 247, 0.9);
+      color: var(--gold-dark);
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
 
-/* PHOTO SCENES */
-.scene {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  pointer-events: none;
-}
+    .nav-btn.active {
+      background: linear-gradient(135deg, var(--gold-mid), var(--gold-dark));
+      color: #fff;
+      border-color: var(--gold-dark);
+      box-shadow: 0 4px 12px rgba(107, 75, 18, 0.25);
+    }
 
-.scene img {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
+    .card-viewport {
+      width: 100%;
+      max-width: 520px;
+      background: var(--cream);
+      border: 2px solid var(--gold-mid);
+      border-radius: 14px;
+      box-shadow: 0 18px 40px rgba(66, 46, 12, 0.18);
+      overflow: hidden;
+    }
 
-/* SCENE 1 */
-#scene1 {
-  animation: sceneOne 15s linear forwards;
-}
+    .page {
+      display: none;
+      padding: 20px 16px 24px;
+      animation: fadeSlide 0.45s ease;
+    }
 
-#scene1 .main-photo {
-  animation: envelopeAppear 2.2s cubic-bezier(.2,.8,.2,1) both;
-}
+    .page.active { display: block; }
 
-/*
-  Duplicate image layer:
-  Clip the upper scalloped envelope area
-  and rotate it around its lower edge.
-*/
-.flap-layer {
-  position: absolute;
-  inset: 0;
-  z-index: 3;
-  transform-style: preserve-3d;
-  transform-origin: 50% 28.5%;
-  clip-path: polygon(
-    12.5% 22%,
-    16% 22.5%,
-    22% 23%,
-    28% 22.2%,
-    35% 23%,
-    42% 22.3%,
-    49% 23%,
-    56% 22.4%,
-    63% 23%,
-    70% 22.5%,
-    78% 23%,
-    81% 24%,
-    81% 29%,
-    12.5% 29%
-  );
-  animation: openFlap 2.5s 2.5s cubic-bezier(.65,0,.25,1) forwards;
-}
+    @keyframes fadeSlide {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
 
-.flap-layer img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
+    .gold-frame {
+      position: relative;
+      border: 2px solid var(--gold-mid);
+      border-radius: 10px;
+      padding: 18px 14px;
+      background: linear-gradient(180deg, #fffdf9 0%, #fbf5e6 100%);
+      box-shadow: inset 0 0 0 4px rgba(229, 198, 123, 0.35);
+    }
 
-@keyframes envelopeAppear {
-  from {
-    opacity: 0;
-    transform: translateY(100px) scale(.88);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
+    .corner-svg {
+      position: absolute;
+      width: 34px;
+      height: 34px;
+      fill: var(--gold-mid);
+      opacity: 0.75;
+    }
+    .tl { top: 4px; left: 4px; }
+    .tr { top: 4px; right: 4px; transform: scaleX(-1); }
+    .bl { bottom: 4px; left: 4px; transform: scaleY(-1); }
+    .br { bottom: 4px; right: 4px; transform: scale(-1, -1); }
 
-@keyframes openFlap {
-  0% {
-    transform: rotateX(0deg);
-    filter: brightness(1);
-  }
-  100% {
-    transform: rotateX(-155deg);
-    filter: brightness(.78);
-  }
-}
+    /* Newspaper Header */
+    .news-masthead {
+      text-align: center;
+      border-bottom: 2px solid var(--gold-dark);
+      padding-bottom: 8px;
+      margin-bottom: 8px;
+    }
 
-@keyframes sceneOne {
-  0%, 20% { opacity: 1; }
-  25%, 100% { opacity: 0; }
-}
+    .news-masthead .main-title {
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: 5px;
+      color: var(--gold-dark);
+    }
 
-/* SCENE 2 : INVITATION SLIDES OUT */
-#scene2 {
-  animation: sceneTwo 15s linear forwards;
-  transform-style: preserve-3d;
-}
+    .news-masthead .sub-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--gold-mid);
+      margin-top: 2px;
+    }
 
-#scene2 .main-photo {
-  animation: cardPullOut 3.2s 0s cubic-bezier(.16,.85,.25,1) both;
-}
+    .news-date-bar {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 4px;
+      background: var(--paper);
+      border-top: 1px solid var(--gold-light);
+      border-bottom: 1.5px solid var(--gold-dark);
+      padding: 6px 10px;
+      font-size: 11.5px;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
 
-@keyframes cardPullOut {
-  0% {
-    opacity: 0;
-    transform:
-      translateY(180px)
-      scale(.96)
-      rotateX(12deg);
-    filter: brightness(.8);
-  }
+    /* Pure SVG Wedding Emblem Box */
+    .emblem-banner {
+      background: radial-gradient(circle, #fff8e7 0%, #f3e4c3 100%);
+      border: 1.5px solid var(--gold-light);
+      border-radius: 10px;
+      padding: 24px 14px;
+      text-align: center;
+      margin-bottom: 14px;
+    }
 
-  35% {
-    opacity: 1;
-  }
+    .emblem-names {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--gold-dark);
+      margin-top: 10px;
+      line-height: 1.5;
+    }
 
-  75% {
-    transform:
-      translateY(-12px)
-      scale(1.015)
-      rotateX(-2deg);
-  }
+    .heart { color: #c62828; }
 
-  100% {
-    opacity: 1;
-    transform:
-      translateY(0)
-      scale(1)
-      rotateX(0deg);
-    filter: brightness(1);
-  }
-}
+    .section-heading {
+      text-align: center;
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--gold-dark);
+      margin-bottom: 14px;
+      padding-bottom: 6px;
+      border-bottom: 1.5px dashed var(--gold-mid);
+    }
 
-@keyframes sceneTwo {
-  0%, 20% { opacity: 0; }
-  25%, 48% { opacity: 1; }
-  53%, 100% { opacity: 0; }
-}
+    .schedule-list {
+      list-style: none;
+      display: grid;
+      gap: 10px;
+    }
 
-/* SCENE 3 : FINAL PRESENTATION */
-#scene3 {
-  animation: sceneThree 15s linear forwards;
-}
+    .schedule-item {
+      background: #fff;
+      border-left: 4px solid var(--gold-mid);
+      padding: 10px 12px;
+      border-radius: 6px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+      font-size: 13.5px;
+      line-height: 1.65;
+    }
 
-#scene3 .main-photo {
-  animation: finalReveal 2.4s cubic-bezier(.2,.8,.2,1) both;
-}
+    .schedule-label {
+      font-weight: 700;
+      color: var(--gold-dark);
+      display: inline-block;
+      min-width: 88px;
+    }
 
-@keyframes finalReveal {
-  0% {
-    opacity: 0;
-    transform:
-      perspective(1400px)
-      rotateY(-18deg)
-      scale(.88);
-  }
+    .invite-block {
+      text-align: center;
+      font-size: 13.5px;
+      line-height: 1.75;
+    }
 
-  100% {
-    opacity: 1;
-    transform:
-      perspective(1400px)
-      rotateY(0deg)
-      scale(1);
-  }
-}
+    .couple-highlight {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--gold-dark);
+      margin: 8px 0 2px;
+    }
 
-@keyframes sceneThree {
-  0%, 48% { opacity: 0; }
-  53%, 100% { opacity: 1; }
-}
+    .role-sub {
+      font-size: 11.5px;
+      color: #5c492c;
+      margin-bottom: 10px;
+    }
 
-/* GOLD FRAME */
-.frame {
-  position: absolute;
-  inset: 48px;
-  z-index: 20;
-  border: 3px solid rgba(185,154,88,.8);
-  outline: 1px solid rgba(185,154,88,.45);
-  outline-offset: 12px;
-  pointer-events: none;
-}
+    .and-mark {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--gold-mid);
+      margin: 8px 0;
+    }
 
-.frame::after {
-  content: "";
-  position: absolute;
-  inset: 25px;
-  border: 1px solid rgba(185,154,88,.35);
-}
+    .closing-note {
+      margin-top: 14px;
+      padding-top: 10px;
+      border-top: 1px solid var(--gold-light);
+      font-weight: 700;
+      color: var(--gold-dark);
+    }
 
-/* DECORATIVE LIGHT */
-.gold-dust {
-  position: absolute;
-  inset: 0;
-  z-index: 15;
-  pointer-events: none;
-  opacity: .28;
-  background-image:
-    radial-gradient(#c7a65e 2px, transparent 3px),
-    radial-gradient(#e6d3a0 2px, transparent 3px);
-  background-size: 130px 150px, 90px 110px;
-  animation: dustMove 12s linear infinite;
-}
+    .std-pure {
+      text-align: center;
+      padding: 28px 14px;
+      background: linear-gradient(145deg, #fffdf9, #f5ead2);
+      border-radius: 10px;
+      border: 1.5px solid var(--gold-light);
+    }
 
-@keyframes dustMove {
-  to {
-    background-position: 0 -500px, 40px -440px;
-  }
-}
+    .std-pure .kicker {
+      font-size: 11px;
+      letter-spacing: 2px;
+      color: #7d6334;
+      margin-bottom: 8px;
+    }
 
-/* REPLAY BUTTON */
-#replay {
-  position: absolute;
-  z-index: 50;
-  bottom: 105px;
-  left: 50%;
-  transform: translateX(-50%);
-  border: 1px solid #b99a58;
-  background: rgba(255,252,244,.9);
-  color: #806638;
-  padding: 22px 55px;
-  border-radius: 50px;
-  font-size: 30px;
-  letter-spacing: 3px;
-  cursor: pointer;
-  opacity: 0;
-  animation: buttonShow 1s 13s forwards;
-}
+    .std-pure h2 {
+      font-family: Georgia, serif;
+      font-style: italic;
+      font-size: 34px;
+      color: var(--gold-dark);
+      margin: 8px 0 12px;
+    }
 
-@keyframes buttonShow {
-  to { opacity: 1; }
-}
+    .std-pure .date-big {
+      font-size: 18px;
+      font-weight: bold;
+      color: #3e2e14;
+      margin-bottom: 4px;
+    }
 
-@media (prefers-reduced-motion: reduce) {
-  .gold-dust {
-    animation: none;
-  }
-}
-</style>
+    .std-pure .time-sub {
+      font-size: 13px;
+      color: #6b542c;
+    }
+
+    .bottom-controls {
+      width: 100%;
+      max-width: 520px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 14px;
+    }
+
+    .step-btn {
+      padding: 9px 18px;
+      border-radius: 25px;
+      border: none;
+      background: linear-gradient(135deg, var(--gold-mid), var(--gold-dark));
+      color: #fff;
+      font-size: 13px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .step-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .page-indicator {
+      font-size: 13px;
+      font-weight: bold;
+      color: var(--gold-dark);
+    }
+  </style>
 </head>
-
 <body>
 
-<div id="stage">
+  <div class="top-nav" id="navTabs">
+    <button class="nav-btn active" data-page="0">၁. မင်္ဂလာသတင်းစာ</button>
+    <button class="nav-btn" data-page="1">၂. အစီအစဉ်</button>
+    <button class="nav-btn" data-page="2">၃. ဖိတ်ကြားလွှာ</button>
+    <button class="nav-btn" data-page="3">၄. Save the Date</button>
+  </div>
 
-  <!-- SCENE 1: CLOSED ENVELOPE -->
-  <section id="scene1" class="scene">
-    <img
-      class="main-photo"
-      src="./1.jpg"
-      alt="Wedding invitation envelope"
-    >
+  <div class="card-viewport">
 
-    <!-- 3D FLAP LAYER -->
-    <div class="flap-layer">
-      <img src="./1.jpg" alt="">
-    </div>
-  </section>
+    <!-- PAGE 1 -->
+    <section class="page active" id="page-0">
+      <div class="news-masthead">
+        <div class="main-title">မ င်္ ဂ လာ သ တ င်း စာ</div>
+        <div class="sub-title">မင်္ဂလာဧည့်ခံပွဲဖိတ်ကြားလွှာ</div>
+      </div>
+      <div class="news-date-bar">
+        <span>၁၃၈၈ ခုနှစ်၊ တန်ဆောင်မုန်းလပြည့်ကျော် (၁၂) ရက်။</span>
+        <span>၆.၁၂.၂၀၂၆ (တနင်္ဂနွေနေ့)</span>
+      </div>
 
-  <!-- SCENE 2: CARD PULLING OUT -->
-  <section id="scene2" class="scene">
-    <img
-      class="main-photo"
-      src="./2.jpg"
-      alt="Wedding invitation card sliding out"
-    >
-  </section>
+      <div class="emblem-banner">
+        <!-- Pure SVG Rings & Floral Crest -->
+        <svg width="96" height="64" viewBox="0 0 120 80" fill="none">
+          <circle cx="46" cy="42" r="24" stroke="#a87b28" stroke-width="4"/>
+          <circle cx="74" cy="42" r="24" stroke="#6b4b12" stroke-width="4"/>
+          <path d="M60 14 L65 22 L55 22 Z" fill="#c62828"/>
+        </svg>
+        <div class="emblem-names">
+          မောင်အောင်ကျော်စိုး <span class="heart">♥</span> မနွယ်နီအောင်<br/>
+          <span style="font-size:14px; font-weight:600; color:#7c5d23;">တို့၏ မင်္ဂလာဧည့်ခံပွဲဖိတ်ကြားလွှာ</span>
+        </div>
+      </div>
+    </section>
 
-  <!-- SCENE 3: FINAL VIEW -->
-  <section id="scene3" class="scene">
-    <img
-      class="main-photo"
-      src="./3.jpg"
-      alt="Wedding invitation final view"
-    >
-  </section>
+    <!-- PAGE 2 -->
+    <section class="page" id="page-1">
+      <div class="gold-frame">
+        <svg class="corner-svg tl" viewBox="0 0 40 40"><path d="M2,2 L26,2 C14,6 6,14 2,26 Z"/></svg>
+        <svg class="corner-svg tr" viewBox="0 0 40 40"><path d="M2,2 L26,2 C14,6 6,14 2,26 Z"/></svg>
+        <svg class="corner-svg bl" viewBox="0 0 40 40"><path d="M2,2 L26,2 C14,6 6,14 2,26 Z"/></svg>
+        <svg class="corner-svg br" viewBox="0 0 40 40"><path d="M2,2 L26,2 C14,6 6,14 2,26 Z"/></svg>
 
-  <div class="gold-dust"></div>
-  <div class="light"></div>
-  <div class="frame"></div>
+        <div class="section-heading">မင်္ဂလာအစီအစဉ်</div>
+        <ul class="schedule-list">
+          <li class="schedule-item">
+            <span class="schedule-label">မင်္ဂလာနေ့ရက်</span> — ၁၃၈၈ ခုနှစ်၊ တန်ဆောင်မုန်းလပြည့်ကျော် (၁၂) ရက်။ ၆.၁၂.၂၀၂၆ (တနင်္ဂနွေနေ့)
+          </li>
+          <li class="schedule-item">
+            <span class="schedule-label">မင်္ဂလာအချိန်</span> — နံနက် (၉:၀၀) နာရီ မှ (၁၂:၀၀) နာရီထိ။
+          </li>
+          <li class="schedule-item">
+            <span class="schedule-label">မင်္ဂလာနေရာ</span> — ရွှေရတုတိပိဋကဓရနိကာယ်စာသင်တိုက်၊ (၂၆)ရပ်ကွက်၊ တောင်ဒဂုံ။
+          </li>
+          <li class="schedule-item">
+            <span class="schedule-label">လမ်းညွှန်</span> — YBS ၃၊ ၆၊ ၇၊ ၅၃၊ ၇၃၊ ၁၀၁၊ ၁၁၁၊ ၁၁၂ ကားများစီး၍ 'ပန်းခြံ' မှတ်တိုင်တွင် ဆင်းပါ။
+          </li>
+        </ul>
+      </div>
+    </section>
 
-  <button id="replay" onclick="replayAnimation()">
-    REPLAY
-  </button>
+    <!-- PAGE 3 -->
+    <section class="page" id="page-2">
+      <div class="gold-frame invite-block">
+        <svg class="corner-svg tl" viewBox="0 0 40 40"><path d="M2,2 L26,2 C14,6 6,14 2,26 Z"/></svg>
+        <svg class="corner-svg tr" viewBox="0 0 40 40"><path d="M2,2 L26,2 C14,6 6,14 2,26 Z"/></svg>
+        <svg class="corner-svg bl" viewBox="0 0 40 40"><path d="M2,2 L26,2 C14,6 6,14 2,26 Z"/></svg>
+        <svg class="corner-svg br" viewBox="0 0 40 40"><path d="M2,2 L26,2 C14,6 6,14 2,26 Z"/></svg>
 
-</div>
+        <div class="section-heading">မင်္ဂလာဧည့်ခံပွဲဖိတ်ကြားလွှာ</div>
 
-<script>
-const stage = document.getElementById("stage");
+        <p>
+          ရန်ကုန်တိုင်းဒေသကြီး၊ ဒဂုံမြို့သစ်(တောင်ပိုင်း)မြို့နယ်၊ (၂၁)ရပ်ကွက်၊<br />
+          မြရတနာလမ်း၊ အမှတ်(၃၀)နေ<br />
+          ဦးတင်စိုး + ဒေါ်မီမီခိုင် တို့၏သား၊ မောင်အောင်ကိုလတ် B.E. (IT)၊<br />
+          မသွယ်သွယ်နိုင် B.E. (Arch) တို့၏အစ်ကို
+        </p>
 
-function fitStage() {
-  const scale = Math.min(
-    window.innerWidth / 1080,
-    window.innerHeight / 1920
-  );
+        <div class="couple-highlight">မောင်အောင်ကျော်စိုး</div>
+        <div class="role-sub">
+          B.A. (Geog), Senior Pre-sales and Solution Engineer<br />
+          (Myanmar Information Highway Limited)
+        </div>
 
-  stage.style.transform = `scale(${scale})`;
-}
+        <div class="and-mark">နှင့်</div>
 
-function replayAnimation() {
-  const scenes = document.querySelectorAll(".scene");
-  const button = document.getElementById("replay");
+        <p>
+          ရန်ကုန်တိုင်းဒေသကြီး၊ ကျောက်တံတားမြို့နယ်၊ (၃၉)လမ်း၊ အမှတ်(၅၀)နေ<br />
+          (ဦးအောင်ညီမ်း) + ဒေါ်အေးအေးစု တို့၏သမီး၊<br />
+          (ဦးစိုးမြင့်လေး) + ဒေါ်အေးအေးယု၊<br />
+          ဦးခင်ဝင်း (ရေယာဉ်မှူး၊ MOGE၊ ဆင်ကြိုး - ၁၀) + ဒေါ်အေးအေးနိုင်၊<br />
+          ဦးတင်ဌေးလှိုင် + ဒေါ်သိန်းသိန်းဦး တို့၏တူမ၊ (ကိုစိုးမိုးအောင်)၏ ညီမ
+        </p>
 
-  scenes.forEach(scene => {
-    scene.style.animation = "none";
-  });
+        <div class="couple-highlight">မနွယ်နီအောင်</div>
+        <div class="role-sub">B.A. (Myanmar)</div>
 
-  button.style.animation = "none";
+        <p class="closing-note">
+          တို့၏<br />
+          'မင်္ဂလာဧည့်ခံပွဲ' သို့ တစ်ဖက်ပါအစီအစဉ်အတိုင်း ကြွရောက်ချီးမြှင့်ပေးပါရန်<br />
+          ခင်မင်ရင်းနှီးစွာဖြင့် ဖိတ်ကြားအပ်ပါသည်။
+        </p>
+      </div>
+    </section>
 
-  void stage.offsetWidth;
+    <!-- PAGE 4 -->
+    <section class="page" id="page-3">
+      <div class="std-pure">
+        <div class="kicker">WE INVITE YOU TO CELEBRATE OUR WEDDING</div>
+        <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+          <polygon points="32,4 58,18 58,46 32,60 6,46 6,18" stroke="#a87b28" stroke-width="2" fill="none"/>
+          <polygon points="32,10 52,21 52,43 32,54 12,43 12,21" stroke="#d4af37" stroke-width="1" fill="none"/>
+          <text x="32" y="36" text-anchor="middle" fill="#6b4b12" font-size="13" font-weight="bold">A ♥ N</text>
+        </svg>
+        <h2>Save the Date</h2>
+        <div class="date-big">December 6th, 2026</div>
+        <div class="time-sub">9:00 AM TO 12:00 PM</div>
+        <p style="margin-top:14px; font-size:13px; color:#5c451e;">
+          မောင်အောင်ကျော်စိုး ♥ မနွယ်နီအောင်<br/>
+          ရွှေရတုတိပိဋကဓရနိကာယ်စာသင်တိုက်၊ (၂၆)ရပ်ကွက်၊ တောင်ဒဂုံ။
+        </p>
+      </div>
+    </section>
 
-  scenes[0].style.animation = "sceneOne 15s linear forwards";
-  scenes[1].style.animation = "sceneTwo 15s linear forwards";
-  scenes[2].style.animation = "sceneThree 15s linear forwards";
+  </div>
 
-  button.style.animation = "buttonShow 1s 13s forwards";
+  <div class="bottom-controls">
+    <button class="step-btn" id="prevBtn" disabled>← ရှေ့သို့</button>
+    <span class="page-indicator" id="pageIndicator">စာမျက်နှာ ၁ / ၄</span>
+    <button class="step-btn" id="nextBtn">နောက်သို့ →</button>
+  </div>
 
-  const photos = document.querySelectorAll(".main-photo");
+  <script>
+    const totalPages = 4;
+    let currentPage = 0;
 
-  photos[0].style.animation = "envelopeAppear 2.2s both";
-  photos[1].style.animation = "cardPullOut 3.2s both";
-  photos[2].style.animation = "finalReveal 2.4s both";
+    const tabs = document.querySelectorAll(".nav-btn");
+    const pages = document.querySelectorAll(".page");
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const indicator = document.getElementById("pageIndicator");
 
-  const flap = document.querySelector(".flap-layer");
-  flap.style.animation = "none";
+    function goToPage(index) {
+      if (index < 0 || index >= totalPages) return;
+      currentPage = index;
+      pages.forEach((p, i) => p.classList.toggle("active", i === currentPage));
+      tabs.forEach((t, i) => t.classList.toggle("active", i === currentPage));
+      prevBtn.disabled = currentPage === 0;
+      nextBtn.disabled = currentPage === totalPages - 1;
+      indicator.textContent = `စာမျက်နှာ ${currentPage + 1} / ${totalPages}`;
+    }
 
-  void flap.offsetWidth;
-
-  flap.style.animation =
-    "openFlap 2.5s 2.5s cubic-bezier(.65,0,.25,1) forwards";
-}
-
-window.addEventListener("resize", fitStage);
-fitStage();
-</script>
+    tabs.forEach((tab) => tab.addEventListener("click", () => goToPage(Number(tab.dataset.page))));
+    prevBtn.addEventListener("click", () => goToPage(currentPage - 1));
+    nextBtn.addEventListener("click", () => goToPage(currentPage + 1));
+  </script>
 
 </body>
 </html>
